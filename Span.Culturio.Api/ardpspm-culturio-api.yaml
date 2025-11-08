@@ -1,0 +1,424 @@
+openapi: 3.0.3
+info:
+  title: ARDPSPM (Span @ FER) - Culturio
+  description: |-
+    1. domaća zadaća - Culturio API
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: apiteam@swagger.io
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.11
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+servers:
+  - url: https://test.com
+paths:
+
+  /auth/register:
+    post:
+      tags:
+        - Auth
+      summary: Register new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterUserDto'
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          description: Validation error
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginDto'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+        '400':
+          description: Bad username or password      
+  
+  /users:
+    get:
+      tags:
+        - Users
+      summary: Get users
+      parameters:
+        - name: pageSize
+          in: query
+          schema:
+            type: integer
+          required: true
+        - name: pageIndex
+          in: query
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: Returns paginated list of users
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          minimum: 1
+                        firstName:
+                          type: string
+                          maxLength: 100
+                        lastName:
+                          type: string
+                          maxLength: 100
+                        email:
+                          type: string
+                          maxLength: 255
+                        username:
+                          type: string
+                          maxLength: 100
+                  totalCount:
+                    type: integer
+  /users/{id}:
+    get:
+      tags:
+        - Users
+      summary: Get single user by Id
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: Returns single user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    minimum: 1
+                  firstName:
+                    type: string
+                    maxLength: 100
+                  lastName:
+                    type: string
+                    maxLength: 100
+                  email:
+                    type: string
+                    maxLength: 255
+                  username:
+                    type: string
+                    maxLength: 100
+  
+  /culture-objects:
+    post:
+      tags:
+        - Culture objects
+      summary: Create new culture object
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+             $ref: '#/components/schemas/CreateCultureObjectDto'
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          description: Validation error
+    
+    get:
+      tags:
+        - Culture objects
+      summary: Get culture objects
+      responses:
+        '200':
+          description: Returns list of culture objects
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+                    contactEmail:
+                      type: string
+                    zipCode:
+                      type: integer
+                    address:
+                      type: string
+                    city:
+                      type: string
+                    adminUserId:
+                      type: integer
+  /culture-objects/{id}:
+    get:
+      tags:
+        - Culture objects
+      summary: Get culture object by Id
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: Returns single culture object
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+                    contactEmail:
+                      type: string
+                    zipCode:
+                      type: integer
+                    address:
+                      type: string
+                    city:
+                      type: string
+                    adminUserId:
+                      type: integer
+  
+  /subscriptions:
+    post:
+      tags:
+        - Subscriptions
+      summary: Create a subscription
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSubscriptionDto'
+      responses:
+        '200':
+          description: Created subscription
+    get:
+      tags:
+        - Subscriptions
+      summary: Get user subscriptions
+      parameters:
+        - name: userId
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+          required: false
+      responses:
+        '200':
+          description: Returns a list of subscriptions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id: 
+                      type: integer
+                    userId:
+                      type: integer
+                    packageId:
+                      type: integer
+                    name:
+                      type: string
+                    activeFrom:
+                      type: string
+                      format: date-time
+                    activeTo:
+                      type: string
+                      format: date-time
+                    state:
+                      type: string
+                      enum:
+                        - active
+                        - expired
+                    recordedVisits:
+                      type: integer
+  /subscriptions/track-visit:
+    post:
+      tags:
+        - Subscriptions
+      summary: Track single visit
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrackVisitDto'
+      responses:
+        '200':
+          description: Visit to culture object recorded
+  /subscriptions/activate:
+    post:
+      tags:
+        - Subscriptions
+      summary: Activate subcription
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ActivateSubscriptionDto'
+      responses:
+        '200':
+          description: Subcription activated
+          
+  /packages:
+    get:
+      tags:
+        - Packages
+      summary: Get packages
+      responses:
+        '200':
+          description: Returns a list of packages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id: 
+                      type: integer
+                    name:
+                      type: string
+                    cultureObjects:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                          availableVisits:
+                            type: integer
+                    validDays:
+                      type: integer
+
+components:
+  schemas:
+    LoginDto:
+      title: LoginDto
+      type: object
+      properties:
+        username:
+          type: string
+          maxLength: 100
+        password:
+          type: string
+          maxLength: 255
+      required:
+        - username
+        - password
+    RegisterUserDto:
+      title: RegisterUserDto
+      type: object
+      properties:
+        firstName:
+          type: string
+          maxLength: 100
+        lastName:
+          type: string
+          maxLength: 100
+        email:
+          type: string
+          format: email
+          maxLength: 255
+        username:
+          type: string
+          maxLength: 100
+        password:
+          type: string
+          maxLength: 100
+    CreateCultureObjectDto:
+      title: CreateCultureObjectDto
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 100
+        contactEmail:
+          type: string
+          maxLength: 255
+        address:
+          type: string
+          maxLength: 250
+        zipCode:
+          type: integer
+          minimum: 1
+        city:
+          type: string
+          maxLength: 250
+        adminUserId:
+          type: integer
+          minimum: 1
+    CreateSubscriptionDto:
+      title: CreateSubscriptionDto
+      type: object
+      properties:
+        userId:
+          type: integer
+          minimum: 1
+        packageId:
+          type: integer
+          minimum: 1
+        name:
+          type: string
+          maxLength: 100
+    TrackVisitDto:
+      title: TrackVisitDto
+      type: object
+      properties:
+        subscriptionId:
+          type: integer
+          minimum: 1
+        cultureObjectId:
+          type: integer
+          minimum: 1
+    ActivateSubscriptionDto:
+      title: ActivateSubscriptionDto
+      type: object
+      properties:
+        subscriptionId:
+          type: integer
+          minimum: 1
