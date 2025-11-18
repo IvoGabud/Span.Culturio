@@ -19,10 +19,18 @@ namespace Span.Culturio.Api.Controllers
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Create([FromBody] CreateSubscriptionDto dto)
         {
-            var subscription = await _subscriptionService.CreateAsync(dto);
-            return Ok(new { message = "Subscription created", id = subscription.Id });
+            try
+            {
+                var subscription = await _subscriptionService.CreateAsync(dto);
+                return Ok(new { message = "Subscription created", id = subscription.Id });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpGet]

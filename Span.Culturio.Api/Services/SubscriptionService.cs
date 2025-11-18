@@ -17,6 +17,18 @@ namespace Span.Culturio.Api.Services
 
         public async Task<Subscription> CreateAsync(CreateSubscriptionDto dto)
         {
+            var userExists = await _context.Users.AnyAsync(u => u.Id == dto.UserId);
+            if (!userExists)
+            {
+                throw new InvalidOperationException($"User with ID {dto.UserId} does not exist");
+            }
+
+            var packageExists = await _context.Packages.AnyAsync(p => p.Id == dto.PackageId);
+            if (!packageExists)
+            {
+                throw new InvalidOperationException($"Package with ID {dto.PackageId} does not exist");
+            }
+
             var subscription = new Subscription
             {
                 UserId = dto.UserId,
