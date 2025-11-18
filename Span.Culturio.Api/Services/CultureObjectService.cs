@@ -17,6 +17,12 @@ namespace Span.Culturio.Api.Services
 
         public async Task<CultureObject> CreateAsync(CreateCultureObjectDto dto)
         {
+            var userExists = await _context.Users.AnyAsync(u => u.Id == dto.AdminUserId);
+            if (!userExists)
+            {
+                throw new InvalidOperationException($"User with ID {dto.AdminUserId} does not exist");
+            }
+
             var cultureObject = new CultureObject
             {
                 Name = dto.Name,
