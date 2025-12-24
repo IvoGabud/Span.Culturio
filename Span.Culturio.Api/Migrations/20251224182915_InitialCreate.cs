@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace Span.Culturio.Api.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -149,6 +151,47 @@ namespace Span.Culturio.Api.Migrations
                         principalTable: "Subscriptions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Packages",
+                columns: new[] { "Id", "Name", "ValidDays" },
+                values: new object[,]
+                {
+                    { 1, "Osnovni paket", 30 },
+                    { 2, "Premium paket", 90 },
+                    { 3, "Godišnji paket", 365 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "Id", "Email", "FirstName", "LastName", "PasswordHash", "Username" },
+                values: new object[] { 1, "admin@culturio.hr", "Admin", "User", "$2a$11$tz4JCwuUMuWtSelRA.C5NOISqpWL5E4vBEYaX903GzpMscp2qeCVi", "admin" });
+
+            migrationBuilder.InsertData(
+                table: "CultureObjects",
+                columns: new[] { "Id", "Address", "AdminUserId", "City", "ContactEmail", "Name", "ZipCode" },
+                values: new object[,]
+                {
+                    { 1, "Rooseveltov trg 5", 1, "Zagreb", "kontakt@mimara.hr", "Muzej Mimara", 10000 },
+                    { 2, "Trg Republike Hrvatske 15", 1, "Zagreb", "info@hnk.hr", "Hrvatsko narodno kazalište", 10000 },
+                    { 3, "Avenija Dubrovnik 17", 1, "Zagreb", "kontakt@msu.hr", "Muzej suvremene umjetnosti", 10000 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "PackageCultureObjects",
+                columns: new[] { "Id", "AvailableVisits", "CultureObjectId", "PackageId" },
+                values: new object[,]
+                {
+                    { 1, 5, 1, 1 },
+                    { 2, 3, 2, 1 },
+                    { 3, 2, 3, 1 },
+                    { 4, 10, 1, 2 },
+                    { 5, 8, 2, 2 },
+                    { 6, 6, 3, 2 },
+                    { 7, 30, 1, 3 },
+                    { 8, 25, 2, 3 },
+                    { 9, 20, 3, 3 }
                 });
 
             migrationBuilder.CreateIndex(

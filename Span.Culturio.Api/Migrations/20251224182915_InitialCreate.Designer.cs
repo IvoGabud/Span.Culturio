@@ -12,8 +12,8 @@ using Span.Culturio.Api.Data;
 namespace Span.Culturio.Api.Migrations
 {
     [DbContext(typeof(CulturioDbContext))]
-    [Migration("20251108150353_init")]
-    partial class init
+    [Migration("20251224182915_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -64,6 +64,38 @@ namespace Span.Culturio.Api.Migrations
                     b.HasIndex("AdminUserId");
 
                     b.ToTable("CultureObjects");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Address = "Rooseveltov trg 5",
+                            AdminUserId = 1,
+                            City = "Zagreb",
+                            ContactEmail = "kontakt@mimara.hr",
+                            Name = "Muzej Mimara",
+                            ZipCode = 10000
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Address = "Trg Republike Hrvatske 15",
+                            AdminUserId = 1,
+                            City = "Zagreb",
+                            ContactEmail = "info@hnk.hr",
+                            Name = "Hrvatsko narodno kazalište",
+                            ZipCode = 10000
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Address = "Avenija Dubrovnik 17",
+                            AdminUserId = 1,
+                            City = "Zagreb",
+                            ContactEmail = "kontakt@msu.hr",
+                            Name = "Muzej suvremene umjetnosti",
+                            ZipCode = 10000
+                        });
                 });
 
             modelBuilder.Entity("Span.Culturio.Api.Models.Entities.Package", b =>
@@ -85,6 +117,26 @@ namespace Span.Culturio.Api.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Packages");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Osnovni paket",
+                            ValidDays = 30
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Premium paket",
+                            ValidDays = 90
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Godišnji paket",
+                            ValidDays = 365
+                        });
                 });
 
             modelBuilder.Entity("Span.Culturio.Api.Models.Entities.PackageCultureObject", b =>
@@ -111,6 +163,71 @@ namespace Span.Culturio.Api.Migrations
                     b.HasIndex("PackageId");
 
                     b.ToTable("PackageCultureObjects");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AvailableVisits = 5,
+                            CultureObjectId = 1,
+                            PackageId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            AvailableVisits = 3,
+                            CultureObjectId = 2,
+                            PackageId = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            AvailableVisits = 2,
+                            CultureObjectId = 3,
+                            PackageId = 1
+                        },
+                        new
+                        {
+                            Id = 4,
+                            AvailableVisits = 10,
+                            CultureObjectId = 1,
+                            PackageId = 2
+                        },
+                        new
+                        {
+                            Id = 5,
+                            AvailableVisits = 8,
+                            CultureObjectId = 2,
+                            PackageId = 2
+                        },
+                        new
+                        {
+                            Id = 6,
+                            AvailableVisits = 6,
+                            CultureObjectId = 3,
+                            PackageId = 2
+                        },
+                        new
+                        {
+                            Id = 7,
+                            AvailableVisits = 30,
+                            CultureObjectId = 1,
+                            PackageId = 3
+                        },
+                        new
+                        {
+                            Id = 8,
+                            AvailableVisits = 25,
+                            CultureObjectId = 2,
+                            PackageId = 3
+                        },
+                        new
+                        {
+                            Id = 9,
+                            AvailableVisits = 20,
+                            CultureObjectId = 3,
+                            PackageId = 3
+                        });
                 });
 
             modelBuilder.Entity("Span.Culturio.Api.Models.Entities.Subscription", b =>
@@ -196,6 +313,17 @@ namespace Span.Culturio.Api.Migrations
                         .IsUnique();
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Email = "admin@culturio.hr",
+                            FirstName = "Admin",
+                            LastName = "User",
+                            PasswordHash = "$2a$11$tz4JCwuUMuWtSelRA.C5NOISqpWL5E4vBEYaX903GzpMscp2qeCVi",
+                            Username = "admin"
+                        });
                 });
 
             modelBuilder.Entity("Span.Culturio.Api.Models.Entities.Visit", b =>
